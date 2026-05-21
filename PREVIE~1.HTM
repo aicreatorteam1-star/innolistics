@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Space Matching Platform — Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ----------------- INLINED space-matching.css ----------------- */
+:root{
+  --sm-deep-space:#0B132B; --sm-electric-purple:#6C2BD9; --sm-neon-cyan:#00E5FF;
+  --sm-text:#1B1F3A; --sm-text-soft:#5D6480; --sm-bg:#F7F8FC; --sm-surface:#FFFFFF;
+  --sm-border:rgba(11,19,43,.12); --sm-border-strong:rgba(11,19,43,.24);
+  --sm-success:#10B981; --sm-danger:#EF4444;
+  --sm-shadow-card:0 4px 14px rgba(11,19,43,.06),0 1px 3px rgba(11,19,43,.04);
+  --sm-shadow-hover:0 10px 28px rgba(108,43,217,.14),0 4px 10px rgba(11,19,43,.06);
+  --sm-shadow-active:0 14px 40px rgba(108,43,217,.30),0 6px 14px rgba(0,229,255,.18);
+  --sm-grad-aurora:linear-gradient(135deg,#6C2BD9 0%,#00E5FF 100%);
+  --sm-grad-galaxy:linear-gradient(135deg,#0B132B 0%,#1A2654 100%);
+  --sm-grad-energy:linear-gradient(135deg,#00E5FF 0%,#6C2BD9 100%);
+  --sm-easing:cubic-bezier(.4,0,.2,1); --sm-dur-fast:140ms; --sm-dur:180ms;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Prompt",system-ui,sans-serif;background:var(--sm-bg);color:var(--sm-text)}
+.sm-page{min-height:100vh;display:flex;flex-direction:column}
+.sm-main{width:100%;max-width:1080px;margin:-56px auto 64px;padding:0 24px;display:flex;flex-direction:column;gap:32px;position:relative;z-index:2}
+.sm-hero{background:var(--sm-grad-galaxy);color:#fff;padding:56px 24px 96px;position:relative;overflow:hidden}
+.sm-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 280px at 12% 0%,rgba(108,43,217,.45),transparent 70%),radial-gradient(700px 280px at 85% 60%,rgba(0,229,255,.30),transparent 70%);pointer-events:none}
+.sm-hero__inner{position:relative;max-width:1080px;margin:0 auto}
+.sm-hero__eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);font-size:13px}
+.sm-hero__title{margin:16px 0 12px;font-size:clamp(28px,4.4vw,44px);line-height:1.18;font-weight:700}
+.sm-hero__title-grad{background:var(--sm-grad-aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sm-hero__sub{max-width:640px;color:rgba(255,255,255,.78);font-size:15px;line-height:1.65;margin:0}
+.sm-section{background:var(--sm-surface);border-radius:24px;box-shadow:var(--sm-shadow-card);padding:28px 28px 32px;border:1px solid var(--sm-border)}
+.sm-section__head{margin-bottom:20px}
+.sm-step-pill{display:inline-block;padding:4px 10px;background:rgba(108,43,217,.10);color:var(--sm-electric-purple);border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.04em;margin-bottom:8px}
+.sm-section__title{display:flex;align-items:center;gap:8px;margin:0 0 4px;font-size:22px;font-weight:600;color:var(--sm-deep-space)}
+.sm-section__sub{margin:0;font-size:14px;color:var(--sm-text-soft);line-height:1.6}
+.sm-branch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.sm-branch-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:144px;padding:18px 18px 16px;background:var(--sm-surface);border:1.5px solid var(--sm-border);border-radius:16px;cursor:pointer;transition:transform var(--sm-dur) var(--sm-easing),box-shadow var(--sm-dur) var(--sm-easing),border-color var(--sm-dur) var(--sm-easing),background var(--sm-dur) var(--sm-easing);text-align:left;font:inherit;color:inherit}
+.sm-branch-card:hover{transform:translateY(-2px);border-color:rgba(108,43,217,.45);box-shadow:var(--sm-shadow-hover)}
+.sm-branch-card:focus-visible{outline:3px solid rgba(108,43,217,.4);outline-offset:2px}
+.sm-branch-card--active{background:linear-gradient(180deg,rgba(108,43,217,.06),rgba(0,229,255,.06));border-color:var(--sm-electric-purple);box-shadow:var(--sm-shadow-active)}
+.sm-branch-card__icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:rgba(108,43,217,.10);color:var(--sm-electric-purple);margin-bottom:8px}
+.sm-branch-card--active .sm-branch-card__icon{background:var(--sm-grad-aurora);color:#fff}
+.sm-branch-card__name{font-weight:600;font-size:17px;color:var(--sm-deep-space)}
+.sm-branch-card__addr{font-size:13px;color:var(--sm-text-soft);line-height:1.5}
+.sm-branch-card__rooms{margin-top:auto;font-size:12px;color:var(--sm-electric-purple);font-weight:600}
+.sm-branch-card__check{position:absolute;top:14px;right:14px;color:var(--sm-electric-purple)}
+.sm-item-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.sm-item-row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:16px;padding:14px 14px 14px 12px;border-radius:14px;border:1px solid var(--sm-border);background:var(--sm-surface);transition:border-color var(--sm-dur) var(--sm-easing),background var(--sm-dur) var(--sm-easing)}
+.sm-item-row:hover{border-color:rgba(108,43,217,.30);background:rgba(108,43,217,.03)}
+.sm-item-row__icon{width:56px;height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(0,229,255,.10);color:var(--sm-deep-space)}
+.sm-item-row__label{font-weight:600;font-size:16px;color:var(--sm-deep-space);margin-bottom:2px}
+.sm-item-row__desc{font-size:13px;color:var(--sm-text-soft)}
+.sm-counter{display:inline-flex;align-items:center;gap:12px}
+.sm-counter__btn{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--sm-border-strong);background:var(--sm-surface);color:var(--sm-deep-space);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform var(--sm-dur-fast) var(--sm-easing),background var(--sm-dur) var(--sm-easing),border-color var(--sm-dur) var(--sm-easing),box-shadow var(--sm-dur) var(--sm-easing)}
+.sm-counter__btn:hover:not(:disabled){transform:scale(1.05);border-color:var(--sm-electric-purple);background:rgba(108,43,217,.08)}
+.sm-counter__btn:active:not(:disabled){transform:scale(0.96)}
+.sm-counter__btn:disabled{opacity:.35;cursor:not-allowed}
+.sm-counter__btn--primary{background:var(--sm-grad-aurora);color:#fff;border-color:transparent}
+.sm-counter__btn--primary:hover:not(:disabled){background:var(--sm-grad-energy);border-color:transparent;box-shadow:0 6px 18px rgba(108,43,217,.32)}
+.sm-counter__value{min-width:36px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600;font-size:18px;color:var(--sm-deep-space)}
+.sm-result{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin-bottom:20px}
+@media(max-width:720px){.sm-result{grid-template-columns:1fr}}
+.sm-result__hero{position:relative;background:var(--sm-grad-aurora);color:#fff;border-radius:20px;padding:24px;overflow:hidden;box-shadow:var(--sm-shadow-active)}
+.sm-result__hero::after{content:"";position:absolute;right:-40px;bottom:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none}
+.sm-result__badge{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.18);font-size:12px;font-weight:600;letter-spacing:.04em}
+.sm-result__size{font-size:72px;font-weight:700;line-height:1;margin:8px 0 16px;letter-spacing:-0.02em}
+.sm-result__meta{display:flex;gap:28px;margin-bottom:12px}
+.sm-result__label{display:block;font-size:12px;opacity:.8;margin-bottom:2px}
+.sm-result__val{font-size:18px;font-weight:600}
+.sm-result__val--price small{opacity:.85;font-weight:500}
+.sm-result__desc{margin:0;font-size:14px;opacity:.9;line-height:1.55;max-width:340px}
+.sm-result__empty{background:rgba(11,19,43,.04);border:1.5px dashed var(--sm-border-strong);color:var(--sm-text-soft);border-radius:20px;padding:32px 20px;text-align:center;font-size:15px}
+.sm-result__compare-title{font-size:13px;font-weight:600;color:var(--sm-text-soft);margin-bottom:10px}
+.sm-result__compare-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.sm-result__compare-item{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--sm-border);border-radius:12px;background:var(--sm-surface);transition:border-color var(--sm-dur) var(--sm-easing),background var(--sm-dur) var(--sm-easing)}
+.sm-result__compare-item--active{background:rgba(108,43,217,.06);border-color:var(--sm-electric-purple)}
+.sm-result__compare-size{font-weight:700;font-size:18px;color:var(--sm-electric-purple)}
+.sm-result__compare-area{color:var(--sm-text-soft);font-size:13px}
+.sm-result__compare-price{font-weight:600;color:var(--sm-deep-space)}
+.sm-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--sm-border);border-radius:16px;overflow:hidden;margin-bottom:20px;border:1px solid var(--sm-border)}
+.sm-summary>div{background:var(--sm-surface);padding:14px 18px}
+.sm-summary__label{display:block;font-size:12px;color:var(--sm-text-soft);margin-bottom:2px}
+.sm-summary__val{font-weight:600;color:var(--sm-deep-space);font-size:15px}
+@media(max-width:720px){.sm-summary{grid-template-columns:1fr}}
+.sm-form{display:flex;flex-direction:column;gap:14px}
+.sm-form__row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.sm-form__row{grid-template-columns:1fr}}
+.sm-field{display:flex;flex-direction:column;gap:6px}
+.sm-field__label{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--sm-text)}
+.sm-field__optional{margin-left:4px;font-size:12px;color:var(--sm-text-soft);font-weight:400}
+.sm-input{height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--sm-border);background:var(--sm-surface);font:inherit;font-size:15px;color:var(--sm-text);transition:border-color var(--sm-dur) var(--sm-easing),box-shadow var(--sm-dur) var(--sm-easing)}
+.sm-input:hover{border-color:var(--sm-border-strong)}
+.sm-input:focus{outline:none;border-color:var(--sm-electric-purple);box-shadow:0 0 0 4px rgba(108,43,217,.14)}
+.sm-input--err{border-color:var(--sm-danger)}
+.sm-input--err:focus{box-shadow:0 0 0 4px rgba(239,68,68,.16)}
+.sm-field__err{color:var(--sm-danger);font-size:12px}
+.sm-form__hint{margin:0;font-size:13px;color:var(--sm-danger)}
+.sm-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:12px;font:inherit;font-weight:600;border:1.5px solid transparent;cursor:pointer;transition:transform var(--sm-dur-fast) var(--sm-easing),box-shadow var(--sm-dur) var(--sm-easing),background var(--sm-dur) var(--sm-easing)}
+.sm-btn--large{height:48px;padding:0 24px;font-size:16px}
+.sm-btn--primary{background:var(--sm-grad-aurora);color:#fff}
+.sm-btn--primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--sm-shadow-active);background:var(--sm-grad-energy)}
+.sm-btn--primary:active:not(:disabled){transform:translateY(0)}
+.sm-btn--primary:disabled{background:rgba(11,19,43,.16);color:rgba(255,255,255,.7);cursor:not-allowed}
+.sm-btn--ghost{background:transparent;border-color:var(--sm-electric-purple);color:var(--sm-electric-purple)}
+.sm-btn--ghost:hover{background:rgba(108,43,217,.08)}
+.sm-success{background:var(--sm-surface);border-radius:24px;padding:48px 24px;text-align:center;border:1px solid var(--sm-border);box-shadow:var(--sm-shadow-card)}
+.sm-success__check{width:72px;height:72px;margin:0 auto 16px;background:var(--sm-grad-aurora);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700}
+.sm-success h2{margin:0 0 8px;font-size:24px;color:var(--sm-deep-space)}
+.sm-success p{margin:0 0 20px;color:var(--sm-text-soft)}
+.sm-footer{margin-top:auto;padding:20px 24px;text-align:center;color:var(--sm-text-soft);font-size:13px;display:flex;justify-content:space-between;align-items:center;max-width:1080px;width:100%;margin-left:auto;margin-right:auto}
+.sm-footer span{display:inline-flex;align-items:center;gap:6px}
+@media(max-width:600px){.sm-footer{flex-direction:column;gap:6px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+const { useState, useMemo, useEffect } = React;
+
+// ---------- Lucide icon helper ----------
+const Icon = ({ name, size=20, stroke=2 }) => {
+  const ref = React.useRef(null);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.innerHTML = "";
+      const el = document.createElement("i");
+      el.setAttribute("data-lucide", name);
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      ref.current.appendChild(el);
+      window.lucide && window.lucide.createIcons({ attrs:{ "stroke-width":stroke } });
+    }
+  }, [name,size,stroke]);
+  return <span ref={ref} style={{display:"inline-flex"}} />;
+};
+
+// ---------- Data ----------
+const ITEM_DEFS = [
+  { key:"box",      label:"กล่องลัง",       description:"กล่องกระดาษมาตรฐาน 60×40×40 ซม.", units:1, iconName:"package" },
+  { key:"luggage",  label:"กระเป๋าเดินทาง",  description:"กระเป๋าเดินทางขนาด 24-28 นิ้ว",   units:2, iconName:"briefcase" },
+  { key:"wardrobe", label:"ตู้เสื้อผ้า",     description:"ตู้สูง 180-200 ซม.",              units:5, iconName:"shirt" },
+  { key:"fridge",   label:"ตู้เย็น",         description:"ตู้เย็น 2 ประตู ขนาดมาตรฐาน",       units:6, iconName:"refrigerator" },
+  { key:"sofa",     label:"โซฟา",           description:"โซฟา 3 ที่นั่ง",                   units:8, iconName:"sofa" },
+];
+const BRANCHES = [
+  { id:"sukhumvit", name:"สาขาสุขุมวิท",  address:"ซ.สุขุมวิท 39 (ใกล้ BTS พร้อมพงษ์)", availableRooms:12 },
+  { id:"bangna",    name:"สาขาบางนา",     address:"ถ.บางนา-ตราด กม.3 (ใกล้ BITEC)",     availableRooms:28 },
+  { id:"rama3",     name:"สาขาพระราม 3", address:"ถ.พระราม 3 ใกล้สะพานพระราม 9",         availableRooms:17 },
+];
+const ROOMS = [
+  { size:"S",  label:"Size S",  area:"≤ 2 ตร.ม.", pricePerMonth:1500, description:"เหมาะกับของส่วนตัว / กล่อง / กระเป๋า ไม่กี่ใบ", capacityUnits:15 },
+  { size:"M",  label:"Size M",  area:"2–4 ตร.ม.", pricePerMonth:2800, description:"เหมาะกับเฟอร์นิเจอร์ชิ้นเล็ก + กล่องจำนวนปานกลาง", capacityUnits:30 },
+  { size:"L",  label:"Size L",  area:"4–6 ตร.ม.", pricePerMonth:4500, description:"เหมาะกับเฟอร์นิเจอร์ใหญ่หลายชิ้น + ของใช้ทั้งบ้าน", capacityUnits:60 },
+  { size:"XL", label:"Size XL", area:"6+ ตร.ม.",  pricePerMonth:6900, description:"เหมาะกับการย้ายบ้านทั้งหลัง / ของสะสมจำนวนมาก",     capacityUnits:Infinity },
+];
+const EMPTY_ITEMS = { box:0, luggage:0, wardrobe:0, fridge:0, sofa:0 };
+const calcUnits = c => ITEM_DEFS.reduce((s,d)=> s + d.units*(c[d.key]||0), 0);
+const calcItems = c => Object.values(c).reduce((s,n)=> s + (n||0), 0);
+const matchRoom = c => { const t=calcUnits(c); if(t<=0) return null; return ROOMS.find(r=> t<=r.capacityUnits) || ROOMS[ROOMS.length-1]; };
+const formatTHB = n => n.toLocaleString("th-TH") + " บาท";
+
+// ---------- LocationSelector ----------
+const LocationSelector = ({ value, onChange }) => (
+  <section className="sm-section">
+    <header className="sm-section__head">
+      <span className="sm-step-pill">ขั้นตอนที่ 1</span>
+      <h2 className="sm-section__title"><Icon name="map-pin" size={22} stroke={2.25}/> เลือกทำเล / สาขา</h2>
+      <p className="sm-section__sub">เลือกสาขาที่สะดวกในการขนย้ายของฝาก เจ้าหน้าที่จะติดต่อกลับเพื่อนัดเวลา</p>
+    </header>
+    <div className="sm-branch-grid">
+      {BRANCHES.map(b=>{
+        const sel = value===b.id;
+        return (
+          <button key={b.id} type="button" onClick={()=>onChange(b.id)} aria-checked={sel}
+            className={"sm-branch-card"+(sel?" sm-branch-card--active":"")}>
+            <span className="sm-branch-card__icon"><Icon name="building-2" size={28} stroke={2}/></span>
+            <span className="sm-branch-card__name">{b.name}</span>
+            <span className="sm-branch-card__addr">{b.address}</span>
+            <span className="sm-branch-card__rooms">เหลือ {b.availableRooms} ห้องว่าง</span>
+            {sel && <span className="sm-branch-card__check"><Icon name="check-circle-2" size={22}/></span>}
+          </button>
+        );
+      })}
+    </div>
+  </section>
+);
+
+// ---------- ItemCounter ----------
+const MAX=99;
+const ItemCounter = ({ value, onChange }) => {
+  const update = (k,d) => {
+    const cur = value[k]||0;
+    const next = Math.max(0, Math.min(MAX, cur+d));
+    if(next===cur) return;
+    onChange({ ...value, [k]:next });
+  };
+  return (
+    <section className="sm-section">
+      <header className="sm-section__head">
+        <span className="sm-step-pill">ขั้นตอนที่ 2</span>
+        <h2 className="sm-section__title"><Icon name="boxes" size={22} stroke={2.25}/> ระบุรายละเอียดสิ่งของ</h2>
+        <p className="sm-section__sub">กดปุ่ม + / − เพื่อระบุจำนวนของแต่ละประเภท ระบบจะนำมาคำนวณขนาดห้องที่เหมาะสมโดยอัตโนมัติ</p>
+      </header>
+      <ul className="sm-item-list">
+        {ITEM_DEFS.map(def=>{
+          const count = value[def.key]||0;
+          return (
+            <li key={def.key} className="sm-item-row">
+              <span className="sm-item-row__icon"><Icon name={def.iconName} size={28} stroke={1.8}/></span>
+              <div>
+                <div className="sm-item-row__label">{def.label}</div>
+                <div className="sm-item-row__desc">{def.description}</div>
+              </div>
+              <div className="sm-counter">
+                <button type="button" className="sm-counter__btn" onClick={()=>update(def.key,-1)} disabled={count<=0} aria-label={"ลด "+def.label}><Icon name="minus" size={18} stroke={2.5}/></button>
+                <span className="sm-counter__value">{count}</span>
+                <button type="button" className="sm-counter__btn sm-counter__btn--primary" onClick={()=>update(def.key,1)} disabled={count>=MAX} aria-label={"เพิ่ม "+def.label}><Icon name="plus" size={18} stroke={2.5}/></button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
+
+// ---------- MatchingResult + Contact form ----------
+const PHONE_RE = /^0\d{8,9}$/;
+const MatchingResult = ({ branch, items, contact, onChangeContact, onSubmit, submitting }) => {
+  const totalItems = calcItems(items);
+  const totalUnits = calcUnits(items);
+  const matched = useMemo(()=>matchRoom(items),[items]);
+  const branchObj = BRANCHES.find(b=>b.id===branch)||null;
+  const [touched,setTouched] = useState({ name:false, phone:false });
+  const errors = {
+    branch: branch==null ? "กรุณาเลือกสาขา" : "",
+    items: totalItems<=0 ? "กรุณาระบุจำนวนสิ่งของอย่างน้อย 1 รายการ" : "",
+    name: contact.fullName.trim().length<2 ? "กรุณากรอกชื่อ-นามสกุล" : "",
+    phone: !PHONE_RE.test(contact.phone.trim()) ? "กรุณากรอกเบอร์โทร 9-10 หลัก (เริ่มต้นด้วย 0)" : "",
+  };
+  const isValid = Object.values(errors).every(e=>!e);
+  const submit = (e) => {
+    e.preventDefault();
+    setTouched({name:true,phone:true});
+    if(!isValid) return;
+    onSubmit();
+  };
+  return (
+    <section className="sm-section">
+      <header className="sm-section__head">
+        <span className="sm-step-pill">ขั้นตอนที่ 3</span>
+        <h2 className="sm-section__title"><Icon name="sparkles" size={22} stroke={2.25}/> ผลการจับคู่ห้องที่เหมาะสม</h2>
+        <p className="sm-section__sub">ระบบคำนวณจากจำนวนสิ่งของของคุณ เป็นข้อเสนอเบื้องต้น เจ้าหน้าที่จะตรวจสอบและยืนยันอีกครั้ง</p>
+      </header>
+
+      <div className="sm-result">
+        {matched ? (
+          <div className="sm-result__hero">
+            <div className="sm-result__badge">เหมาะสมที่สุด</div>
+            <div className="sm-result__size">{matched.size}</div>
+            <div className="sm-result__meta">
+              <div><span className="sm-result__label">ขนาดห้อง</span><span className="sm-result__val">{matched.area}</span></div>
+              <div><span className="sm-result__label">ราคา</span><span className="sm-result__val sm-result__val--price">{formatTHB(matched.pricePerMonth)}<small> / เดือน</small></span></div>
+            </div>
+            <p className="sm-result__desc">{matched.description}</p>
+          </div>
+        ) : (
+          <div className="sm-result__empty">ยังไม่มีรายการ — เพิ่มจำนวนสิ่งของในขั้นตอนที่ 2 เพื่อดูผลลัพธ์</div>
+        )}
+        <div>
+          <div className="sm-result__compare-title">ตัวเลือกห้องอื่น</div>
+          <ul className="sm-result__compare-list">
+            {ROOMS.map(r=>{
+              const active = matched && matched.size===r.size;
+              return (
+                <li key={r.size} className={"sm-result__compare-item"+(active?" sm-result__compare-item--active":"")}>
+                  <span className="sm-result__compare-size">{r.size}</span>
+                  <span className="sm-result__compare-area">{r.area}</span>
+                  <span className="sm-result__compare-price">{formatTHB(r.pricePerMonth)}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+
+      <div className="sm-summary">
+        <div><span className="sm-summary__label">สาขาที่เลือก</span><span className="sm-summary__val">{branchObj?branchObj.name:"— ยังไม่ได้เลือก —"}</span></div>
+        <div><span className="sm-summary__label">จำนวนสิ่งของ</span><span className="sm-summary__val">{totalItems} รายการ</span></div>
+        <div><span className="sm-summary__label">หน่วยพื้นที่</span><span className="sm-summary__val">{totalUnits} units</span></div>
+      </div>
+
+      <form className="sm-form" onSubmit={submit} noValidate>
+        <div className="sm-form__row">
+          <label className="sm-field">
+            <span className="sm-field__label"><Icon name="user" size={16}/> ชื่อ - นามสกุล</span>
+            <input type="text" className={"sm-input"+(touched.name&&errors.name?" sm-input--err":"")}
+              placeholder="เช่น สมชาย ใจดี" value={contact.fullName}
+              onChange={e=>onChangeContact({...contact,fullName:e.target.value})}
+              onBlur={()=>setTouched(t=>({...t,name:true}))} required />
+            {touched.name && errors.name && <span className="sm-field__err">{errors.name}</span>}
+          </label>
+          <label className="sm-field">
+            <span className="sm-field__label"><Icon name="phone" size={16}/> เบอร์โทรศัพท์</span>
+            <input type="tel" inputMode="numeric" className={"sm-input"+(touched.phone&&errors.phone?" sm-input--err":"")}
+              placeholder="0XXXXXXXXX" value={contact.phone} maxLength={10}
+              onChange={e=>onChangeContact({...contact,phone:e.target.value.replace(/[^\d]/g,"")})}
+              onBlur={()=>setTouched(t=>({...t,phone:true}))} required />
+            {touched.phone && errors.phone && <span className="sm-field__err">{errors.phone}</span>}
+          </label>
+        </div>
+        <label className="sm-field">
+          <span className="sm-field__label"><Icon name="clock-3" size={16}/> ช่วงเวลาที่สะดวกให้ติดต่อกลับ <span className="sm-field__optional">(ไม่บังคับ)</span></span>
+          <input type="text" className="sm-input" placeholder="เช่น จันทร์–ศุกร์ 10:00–18:00"
+            value={contact.preferredContactTime||""}
+            onChange={e=>onChangeContact({...contact,preferredContactTime:e.target.value})}/>
+        </label>
+        <button type="submit" className="sm-btn sm-btn--primary sm-btn--large" disabled={!isValid||submitting}>
+          <Icon name="send" size={18} stroke={2.25}/> {submitting?"กำลังส่งข้อมูล...":"ส่งข้อมูลให้เจ้าหน้าที่ติดต่อกลับ"}
+        </button>
+        {!isValid && (touched.name||touched.phone) && (
+          <p className="sm-form__hint">{errors.branch || errors.items || "กรุณาตรวจสอบข้อมูลให้ครบถ้วน"}</p>
+        )}
+      </form>
+    </section>
+  );
+};
+
+// ---------- Page ----------
+const App = () => {
+  const [branch,setBranch] = useState(null);
+  const [items,setItems] = useState(EMPTY_ITEMS);
+  const [contact,setContact] = useState({fullName:"",phone:"",preferredContactTime:""});
+  const [submitting,setSubmitting] = useState(false);
+  const [submitted,setSubmitted] = useState(false);
+
+  const handleSubmit = () => {
+    setSubmitting(true);
+    const payload = { branch, branchName:BRANCHES.find(b=>b.id===branch)?.name, items, matched:matchRoom(items), contact, submittedAt:new Date().toISOString() };
+    console.log("[SpaceMatching] payload →", payload);
+    setTimeout(()=>{ setSubmitting(false); setSubmitted(true); }, 600);
+  };
+
+  const reset = () => { setBranch(null); setItems(EMPTY_ITEMS); setContact({fullName:"",phone:"",preferredContactTime:""}); setSubmitted(false); };
+
+  return (
+    <div className="sm-page">
+      <header className="sm-hero">
+        <div className="sm-hero__inner">
+          <span className="sm-hero__eyebrow"><Icon name="warehouse" size={16} stroke={2.25}/> Space Matching Platform</span>
+          <h1 className="sm-hero__title">ฝากเก็บของง่าย ๆ<br/><span className="sm-hero__title-grad">เลือกสาขา · จับคู่ห้อง · จบในหน้าเดียว</span></h1>
+          <p className="sm-hero__sub">ระบุสิ่งของที่ต้องการฝาก ระบบจะคำนวณขนาดห้องที่เหมาะสมพร้อมราคาให้ทันที จากนั้นเจ้าหน้าที่จะติดต่อกลับเพื่อยืนยันรายละเอียด</p>
+        </div>
+      </header>
+      <main className="sm-main">
+        {submitted ? (
+          <div className="sm-success">
+            <div className="sm-success__check">✓</div>
+            <h2>ส่งข้อมูลเรียบร้อย</h2>
+            <p>ขอบคุณคุณ <strong>{contact.fullName}</strong> เจ้าหน้าที่จะติดต่อกลับทางเบอร์ <strong>{contact.phone}</strong> ภายใน 24 ชั่วโมง</p>
+            <button className="sm-btn sm-btn--ghost" onClick={reset}>ทำรายการใหม่</button>
+          </div>
+        ) : (
+          <>
+            <LocationSelector value={branch} onChange={setBranch}/>
+            <ItemCounter value={items} onChange={setItems}/>
+            <MatchingResult branch={branch} items={items} contact={contact}
+              onChangeContact={setContact} onSubmit={handleSubmit} submitting={submitting}/>
+          </>
+        )}
+      </main>
+      <footer className="sm-footer">
+        <span><Icon name="phone" size={14} stroke={2.25}/> ติดต่อสอบถาม 02-XXX-XXXX</span>
+        <span>© {new Date().getFullYear()} InnOlistic · Space Matching</span>
+      </footer>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

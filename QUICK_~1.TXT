@@ -1,0 +1,34 @@
+=============================================================================
+  SPACE MATCHING — QUICK DEPLOY
+  Repo: https://github.com/aicreatorteam1-star/innolistics
+=============================================================================
+
+Windows (PowerShell):
+---------------------
+    cd "C:\Users\nudtakrp\AppData\Roaming\Claude\local-agent-mode-sessions\47a55151-0597-4b9a-aa5b-d979e815c571\9f36a78d-e206-41c4-9e3a-b77a9d62f609\local_28284a11-fd81-42f9-b463-768446d1a851\outputs\space-matching"
+    .\deploy.ps1
+
+Mac / Linux / WSL:
+------------------
+    cd .../space-matching
+    bash deploy.sh
+
+ขั้นตอนที่ browser จะถามตอน script run:
+  1. GitHub login  (browser เด้งครั้งแรก ผ่าน Git Credential Manager)
+  2. Vercel login  (browser เด้ง, click "Continue with GitHub")
+  3. Vercel prompt:
+       Set up and deploy? .........  Y
+       Which scope?  ..............  เลือก team ตัวเอง
+       Link to existing project?  .  N
+       What's your project's name?  innolistics (กด Enter รับ default)
+       In which directory?  ........  ./  (กด Enter)
+       Modify settings? .............  N
+
+หลังเสร็จจะได้ Production URL หน้าตา:
+  https://innolistics-xxxxxxxx.vercel.app
+
+ส่ง URL นั้นกลับมาให้ Claude ผ่าน chat เพื่อ:
+  - ตรวจสอบ build logs
+  - ทดสอบหน้า production
+  - debug ถ้ามี error
+=============================================================================
